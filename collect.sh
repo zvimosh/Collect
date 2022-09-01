@@ -31,9 +31,21 @@ function directory_validation()
         return 0
 }
 #function to create directory
-function make_dirctory () {
-        echo "$DIRECTORY did not exist, will create it"
-        mkdir $1
+function make_dirctory()
+{
+        if [ -d $1 ]
+        then
+                echo "Directory $1 already exists"
+        else
+                mkdir $1
+                if [ $? -eq 0 ]
+                then
+                        echo "Directory $1 created"
+                else
+                        echo "Directory $1 not created"
+                        exit 1
+                fi
+        fi
 }
 
 # function change permissions to a folder
@@ -46,16 +58,26 @@ function change_permissions()
         chmod $1$2$3 $4
 }
 
-# function to copy files from one folder to another
-copy_files()
+# function to move files from one folder to another
+move_files()
 {
-        echo ''
+        mv $SEARCHED_FILES $2
 }
 
 find_files()
 {
-    find $1 -perm /$2 -name "$3"
+    SEARCHED_FILES=find $1 -perm /$2 -name "$3"
+}
 
+# function replace folder
+replace_folder()
+{
+        if [ -z $1 ]
+        then
+                EXE_DIRECTORY="$2"
+        else
+                EXE_DIRECTORY="$1"
+        fi
 }
 
 # MAIN
@@ -66,18 +88,19 @@ then
 fi
 
 # checks if given folder is valid
-
 directory_validation "$SOURCE_DIRECTORY" "r"
-echo -n "Choose a directory for Executable files to be moved default - [$EXE_DIRECTORY]: "
-read EXE_DIRECTORY_TEMP
-if [ -z $EXE_DIRECTORY_TEMP ]
-then
-        EXE_DIRECTORY=$EXE_DIRECTORY
-else
-        EXE_DIRECTORY=$EXE_DIRECTORY_TEMP
-fi
 
+echo -n "Choose a directory for Executable files to be moved default, press enter to use default or wait 10 seconds - default:[$EXE_DIRECTORY]: "
+read -t 5 EXE_DIRECTORY_TEMP
+echo ""
+echo "old exe directory is $EXE_DIRECTORY"
+replace_folder $EXE_DIRECTORY_TEMP $EXE_DIRECTORY
+make_dirctory $EXE_DIRECTORY
 find_files "$SOURCE_DIRECTORY" "u+x,o+x,g+x" "*.bin"
+
+
+
+
 
 #change_permissions "u" "+" "rwx" "$SOURCE_DIRECTORY"
 #change_permissions "o" "+" "r" "$SOURCE_DIRECTORY"
