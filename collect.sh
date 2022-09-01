@@ -7,6 +7,7 @@ EXE_DIRECTORY="~/bin"
 LIB_DIRECTORY="~/lib"
 SRC_DIRECTORY="~/src"
 INCLUDE_DIRECTORY="~/inc"
+INPUT_TIMEOUT=10
 
 # check if given a folder as parameter, if not then ask for a folder
 
@@ -84,17 +85,21 @@ replace_folder()
 if [ -z $1 ]
 then
                 echo -n 'which directory do you want to collect from?: '
-                read SOURCE_DIRECTORY
+                read -t $INPUT_TIMEOUT SOURCE_DIRECTORY
+                if [ -z $SOURCE_DIRECTORY ]
+                then
+                        echo "No directory given, using working directory `pwd`"
+                        SOURCE_DIRECTORY = `pwd`
+                fi
 fi
 
 # checks if given folder is valid
 directory_validation "$SOURCE_DIRECTORY" "r"
 
 echo -n "Choose a directory for Executable files to be moved default, press enter to use default or wait 10 seconds - default:[$EXE_DIRECTORY]: "
-read -t 5 EXE_DIRECTORY_TEMP
+read -t $INPUT_TIMEOUT EXE_DIRECTORY_TEMP
 echo ""
 echo "old directory is $EXE_DIRECTORY"
-#replace_folder $EXE_DIRECTORY_TEMP $EXE_DIRECTORY "EXE_DIRECTORY"
 EXE_DIRECTORY=$(replace_folder $EXE_DIRECTORY_TEMP $EXE_DIRECTORY)
 echo "new directory is $EXE_DIRECTORY"
 make_dirctory $EXE_DIRECTORY
@@ -102,7 +107,7 @@ make_dirctory $EXE_DIRECTORY
 
 
 echo -n "Choose a directory for LIB files to be moved default, press enter to use default or wait 10 seconds - default:[$LIB_DIRECTORY]: "
-read -t 5 LIB_DIRECTORY_TEMP
+read -t $INPUT_TIMEOUT LIB_DIRECTORY_TEMP
 echo ""
 echo "old directory is $LIB_DIRECTORY"
 LIB_DIRECTORY=$(replace_folder $LIB_DIRECTORY_TEMP $LIB_DIRECTORY)
@@ -110,14 +115,14 @@ make_dirctory $LIB_DIRECTORY
 
 
 echo -n "Choose a directory for SRC files to be moved default, press enter to use default or wait 10 seconds - default:[$SRC_DIRECTORY]: "
-read -t 5 SRC_DIRECTORY_TEMP
+read -t $INPUT_TIMEOUT SRC_DIRECTORY_TEMP
 echo ""
 echo "old directory is $SRC_DIRECTORY"
 SRC_DIRECTORY=$(replace_folder $SRC_DIRECTORY_TEMP $SRC_DIRECTORY)
 make_dirctory $SRC_DIRECTORY
 
 echo -n "Choose a directory for INCLUDE files to be moved default, press enter to use default or wait 10 seconds - default:[$INCLUDE_DIRECTORY]: "
-read -t 5 INCLUDE_DIRECTORY_TEMP
+read -t $INPUT_TIMEOUT INCLUDE_DIRECTORY_TEMP
 echo ""
 echo "old directory is $INCLUDE_DIRECTORY"
 INCLUDE_DIRECTORY=$(replace_folder $INCLUDE_DIRECTORY_TEMP $INCLUDE_DIRECTORY)
