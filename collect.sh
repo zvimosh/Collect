@@ -74,9 +74,9 @@ replace_folder()
 {
         if [ -z $1 ]
         then
-                EXE_DIRECTORY="$2"
+                echo "$2"
         else
-                EXE_DIRECTORY="$1"
+                echo "$1"
         fi
 }
 
@@ -93,13 +93,35 @@ directory_validation "$SOURCE_DIRECTORY" "r"
 echo -n "Choose a directory for Executable files to be moved default, press enter to use default or wait 10 seconds - default:[$EXE_DIRECTORY]: "
 read -t 5 EXE_DIRECTORY_TEMP
 echo ""
-echo "old exe directory is $EXE_DIRECTORY"
-replace_folder $EXE_DIRECTORY_TEMP $EXE_DIRECTORY
+echo "old directory is $EXE_DIRECTORY"
+#replace_folder $EXE_DIRECTORY_TEMP $EXE_DIRECTORY "EXE_DIRECTORY"
+EXE_DIRECTORY=$(replace_folder $EXE_DIRECTORY_TEMP $EXE_DIRECTORY)
+echo "new directory is $EXE_DIRECTORY"
 make_dirctory $EXE_DIRECTORY
-find_files "$SOURCE_DIRECTORY" "u+x,o+x,g+x" "*.bin"
+#find_files "$SOURCE_DIRECTORY" "u+x,o+x,g+x" "*.bin"
 
 
+echo -n "Choose a directory for LIB files to be moved default, press enter to use default or wait 10 seconds - default:[$LIB_DIRECTORY]: "
+read -t 5 LIB_DIRECTORY_TEMP
+echo ""
+echo "old directory is $LIB_DIRECTORY"
+LIB_DIRECTORY=$(replace_folder $LIB_DIRECTORY_TEMP $LIB_DIRECTORY)
+make_dirctory $LIB_DIRECTORY
 
+
+echo -n "Choose a directory for SRC files to be moved default, press enter to use default or wait 10 seconds - default:[$SRC_DIRECTORY]: "
+read -t 5 SRC_DIRECTORY_TEMP
+echo ""
+echo "old directory is $SRC_DIRECTORY"
+SRC_DIRECTORY=$(replace_folder $SRC_DIRECTORY_TEMP $SRC_DIRECTORY)
+make_dirctory $SRC_DIRECTORY
+
+echo -n "Choose a directory for INCLUDE files to be moved default, press enter to use default or wait 10 seconds - default:[$INCLUDE_DIRECTORY]: "
+read -t 5 INCLUDE_DIRECTORY_TEMP
+echo ""
+echo "old directory is $INCLUDE_DIRECTORY"
+INCLUDE_DIRECTORY=$(replace_folder $INCLUDE_DIRECTORY_TEMP $INCLUDE_DIRECTORY)
+make_dirctory $INCLUDE_DIRECTORY
 
 
 #change_permissions "u" "+" "rwx" "$SOURCE_DIRECTORY"
