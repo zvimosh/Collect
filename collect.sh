@@ -3,10 +3,10 @@
 # set variables
 SOURCE_DIRECTORY=$1
 
-EXE_DIRECTORY="~/bin"
-LIB_DIRECTORY="~/lib"
-SRC_DIRECTORY="~/src"
-INCLUDE_DIRECTORY="~/inc"
+EXE_DIRECTORY=~/bin
+LIB_DIRECTORY=~/lib
+SRC_DIRECTORY=~/src
+INCLUDE_DIRECTORY=~/inc
 INPUT_TIMEOUT=10
 
 # check if given a folder as parameter, if not then ask for a folder
@@ -38,7 +38,7 @@ function make_dirctory()
         then
                 echo "Directory $1 already exists"
         else
-                mkdir $1
+                mkdir -p $1
                 if [ $? -eq 0 ]
                 then
                         echo "Directory $1 created"
@@ -92,6 +92,7 @@ then
                         SOURCE_DIRECTORY = `pwd`
                 fi
 fi
+
 
 # checks if given folder is valid
 directory_validation "$SOURCE_DIRECTORY" "r"
