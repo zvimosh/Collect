@@ -25,11 +25,11 @@ function directory_validation()
                         echo "Directory $1 is valid"
                 else
                         echo "Directory $1 does not have requsted permissions"
-                        return 1
+                        exit 1
                 fi
         else
                 echo "Directory $1 is not valid"
-                return 1
+                exit 1
         fi
         return 0
 }
