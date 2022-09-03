@@ -67,18 +67,19 @@ move_files()
         start_move=$(date +%s%N)
         for item in $@
         do
+                # progess works great for large files, but irrelevnt for small files so removed from script
                 #mv -v $item $DEST_DIRECTORY | tee -a $LOG_DIRECTORY/$LOG_FILE | progress -wmc mv
                 mv -v $item $DEST_DIRECTORY | tee -a $LOG_DIRECTORY/$LOG_FILE
                 let MOVE_COUNTER=MOVE_COUNTER+1
         done
         end_move=$(date +%s%N)
+        #echo back into variable
         echo "$MOVE_COUNTER files were moved to $DEST_DIRECTORY, Elapsed time: $(($(($end_move-$start_move))/1000000)) ms"
 }
 
 # function find files with specific permissions and filter
 find_files()
 {
-    #SEARCHED_FILES=`find $1 -perm /$2 -name "$3" -type f`
     SEARCHED_FILES=`find $@`
 }
 
@@ -111,7 +112,7 @@ directory_validation "$SOURCE_DIRECTORY" "r"
 
 echo -n "Choose a directory for the log file [$LOG_FILE], press enter to use default or wait 10 seconds - default:[$LOG_DIRECTORY]: "
 read -t $INPUT_TIMEOUT LOG_DIRECTORY_TEMP
-echo ""
+echo 
 LOG_DIRECTORY=$(replace_folder $LOG_DIRECTORY_TEMP $LOG_DIRECTORY)
 make_dirctory $LOG_DIRECTORY
 #change to correct permissions
@@ -119,7 +120,7 @@ change_permissions "u" "+" "rwx" "$LOG_DIRECTORY"
 
 echo -n "Choose a directory for Executable files to be moved default, press enter to use default or wait 10 seconds - default:[$EXE_DIRECTORY]: "
 read -t $INPUT_TIMEOUT EXE_DIRECTORY_TEMP
-echo ""
+echo 
 EXE_DIRECTORY=$(replace_folder $EXE_DIRECTORY_TEMP $EXE_DIRECTORY)
 make_dirctory $EXE_DIRECTORY
 #change to correct permissions
@@ -134,7 +135,7 @@ EXE_SUMMARY=$(move_files $SEARCHED_FILES)
 
 echo -n "Choose a directory for LIB files to be moved default, press enter to use default or wait 10 seconds - default:[$LIB_DIRECTORY]: "
 read -t $INPUT_TIMEOUT LIB_DIRECTORY_TEMP
-echo ""
+echo 
 LIB_DIRECTORY=$(replace_folder $LIB_DIRECTORY_TEMP $LIB_DIRECTORY)
 make_dirctory $LIB_DIRECTORY
 DEST_DIRECTORY=$LIB_DIRECTORY
@@ -145,7 +146,7 @@ LIB_SUMMARY=$(move_files $SEARCHED_FILES)
 
 echo -n "Choose a directory for SRC files to be moved default, press enter to use default or wait 10 seconds - default:[$SRC_DIRECTORY]: "
 read -t $INPUT_TIMEOUT SRC_DIRECTORY_TEMP
-echo ""
+echo 
 SRC_DIRECTORY=$(replace_folder $SRC_DIRECTORY_TEMP $SRC_DIRECTORY)
 make_dirctory $SRC_DIRECTORY
 DEST_DIRECTORY=$SRC_DIRECTORY
@@ -156,7 +157,7 @@ SRC_SUMMARY=$(move_files $SEARCHED_FILES)
 
 echo -n "Choose a directory for INCLUDE files to be moved default, press enter to use default or wait 10 seconds - default:[$INCLUDE_DIRECTORY]: "
 read -t $INPUT_TIMEOUT INCLUDE_DIRECTORY_TEMP
-echo ""
+echo 
 INCLUDE_DIRECTORY=$(replace_folder $INCLUDE_DIRECTORY_TEMP $INCLUDE_DIRECTORY)
 make_dirctory $INCLUDE_DIRECTORY
 DEST_DIRECTORY=$INCLUDE_DIRECTORY
@@ -164,9 +165,7 @@ DEST_DIRECTORY=$INCLUDE_DIRECTORY
 find_files $SOURCE_DIRECTORY -perm /u+r -name "*.h" -o -name "*.hxx" -type f
 INC_SUMMARY=$(move_files $SEARCHED_FILES)
 
-#change_permissions "u" "+" "rwx" "$SOURCE_DIRECTORY"
-#change_permissions "o" "+" "r" "$SOURCE_DIRECTORY"
-
+# outputs script summary
 echo "--------------Script Summary:--------------"
 echo
 echo "**************EXE Categroy:  **************"
