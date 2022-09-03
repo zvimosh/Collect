@@ -62,13 +62,17 @@ function change_permissions()
 # function to move files from one folder to another
 move_files()
 {
+
         MOVE_COUNTER=0
+        start_move=$(date +%s%N)
         for item in $@
         do
-                mv -v $item $DEST_DIRECTORY | tee -a $LOG_DIRECTORY/$LOG_FILE && progress -wm
+                #mv -v $item $DEST_DIRECTORY | tee -a $LOG_DIRECTORY/$LOG_FILE | progress -wmc mv
+                mv -v $item $DEST_DIRECTORY | tee -a $LOG_DIRECTORY/$LOG_FILE
                 let MOVE_COUNTER=MOVE_COUNTER+1
-
         done
+        end_move=$(date +%s%N)
+        echo "$MOVE_COUNTER files were moved to $DEST_DIRECTORY, Elapsed time: $(($(($end_move-$start_move))/1000000)) ms"
 }
 
 # function find files with specific permissions and filter
@@ -101,7 +105,7 @@ then
                 fi
 fi
 
-
+start_script=$(date +%s%N)
 # checks if given folder is valid
 directory_validation "$SOURCE_DIRECTORY" "r"
 
@@ -125,8 +129,8 @@ DEST_DIRECTORY=$EXE_DIRECTORY
 #find_files "$SOURCE_DIRECTORY" "u+x,o+x,g+x" "*.bin"
 
 find_files $SOURCE_DIRECTORY -perm /u+x,o+x,g+x -type f
-echo $SEARCHED_FILES
-move_files $SEARCHED_FILES 
+
+EXE_SUMMARY=$(move_files $SEARCHED_FILES)
 
 echo -n "Choose a directory for LIB files to be moved default, press enter to use default or wait 10 seconds - default:[$LIB_DIRECTORY]: "
 read -t $INPUT_TIMEOUT LIB_DIRECTORY_TEMP
@@ -136,7 +140,7 @@ make_dirctory $LIB_DIRECTORY
 DEST_DIRECTORY=$LIB_DIRECTORY
 #change_permissions "ugo" "+" "rw"  "$LIB_DIRECTORY"
 find_files $SOURCE_DIRECTORY -perm /u+r -name "lib*.*" -type f
-move_files $SEARCHED_FILES 
+LIB_SUMMARY=$(move_files $SEARCHED_FILES)
 
 
 echo -n "Choose a directory for SRC files to be moved default, press enter to use default or wait 10 seconds - default:[$SRC_DIRECTORY]: "
@@ -147,7 +151,7 @@ make_dirctory $SRC_DIRECTORY
 DEST_DIRECTORY=$SRC_DIRECTORY
 #change_permissions "ugo" "+" "rw"  "$SRC_DIRECTORY"
 find_files $SOURCE_DIRECTORY -perm /u+r -name "*.c" -o -name "*.cc" -o -name "*.cpp" -o -name "*.cxx" -type f
-move_files $SEARCHED_FILES
+SRC_SUMMARY=$(move_files $SEARCHED_FILES)
 
 
 echo -n "Choose a directory for INCLUDE files to be moved default, press enter to use default or wait 10 seconds - default:[$INCLUDE_DIRECTORY]: "
@@ -158,7 +162,24 @@ make_dirctory $INCLUDE_DIRECTORY
 DEST_DIRECTORY=$INCLUDE_DIRECTORY
 #change_permissions "ugo" "+" "rw"  "$INCLUDE_DIRECTORY"
 find_files $SOURCE_DIRECTORY -perm /u+r -name "*.h" -o -name "*.hxx" -type f
-move_files $SEARCHED_FILES
+INC_SUMMARY=$(move_files $SEARCHED_FILES)
 
 #change_permissions "u" "+" "rwx" "$SOURCE_DIRECTORY"
 #change_permissions "o" "+" "r" "$SOURCE_DIRECTORY"
+
+echo "--------------Script Summary:--------------"
+echo
+echo "**************EXE Categroy:  **************"
+echo "$EXE_SUMMARY"
+echo
+echo "**************LIB Categroy:  **************"
+echo "$LIB_SUMMARY"
+echo
+echo "**************SRC Categroy:  **************"
+echo "$SRC_SUMMARY"
+echo
+echo "**************INC Categroy:  **************"
+echo "$INC_SUMMARY"
+echo
+end_script=$(date +%s%N)
+echo "Script elapsed time: $(($(($end_script-$start_script))/1000000)) ms"
