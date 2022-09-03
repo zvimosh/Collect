@@ -62,9 +62,12 @@ function change_permissions()
 # function to move files from one folder to another
 move_files()
 {
+        MOVE_COUNTER=0
         for item in $@
         do
-                mv -v $item $DEST_DIRECTORY | tee -a $LOG_DIRECTORY/$LOG_FILE
+                mv -v $item $DEST_DIRECTORY | tee -a $LOG_DIRECTORY/$LOG_FILE && progress -wm
+                let MOVE_COUNTER=MOVE_COUNTER+1
+
         done
 }
 
