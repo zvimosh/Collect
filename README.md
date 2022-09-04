@@ -17,10 +17,10 @@ This script is used to collect files from a given folder and devide them into se
 chmod +x collect.sh
 ./collect.sh "SOURCE_DIRECTORY"
 
-Example:
+**Example:**
 ./collect.sh "~/Downloads/MyPackage/"
 
-Parameters (Defaults):
+**Parameters (Defaults):**
 SOURCE_DIRECTORY=$1
 EXE_DIRECTORY=~/bin
 LIB_DIRECTORY=~/lib
