@@ -42,4 +42,4 @@ all "DIRECTORY" parameters can be changed during the script runtime.
 * 03-09-2022
     * Finished Script
 * 07-0-2022
-    * Added revernse.sh
+    * Added reverse.sh
