@@ -33,8 +33,13 @@ chmod +x collect.sh
 A postional paramter $1 is accepted for SOURCE_DIRECTORY, if no positinal paramter is given, the script will read the input for the SOURCE_DIRECTORY
 all "DIRECTORY" parameters can be changed during the script runtime.
 
+## Reverse Script
+* A simple script that reads the log file from "collect.sh" and puts all moved files back to the source folders
+
 ## Changelog
 * 31-08-2022
     * Initial version
 * 03-09-2022
     * Finished Script
+* 07-0-2022
+    * Added revernse.sh
